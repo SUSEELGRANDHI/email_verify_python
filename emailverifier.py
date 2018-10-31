@@ -1,6 +1,4 @@
-from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.chrome.options import Options
+from AccountVerify import AccountVerify
 import smtplib,dns
 from dns import resolver
 import re,random
@@ -27,13 +25,10 @@ def emailVerifier(email_address):
         mxRecord = str(mxRecord)
         host = socket.gethostname()
         server = smtplib.SMTP()
-        server.set_debuglevel(0)
-        server.connect(mxRecord)
-        server.helo(host)
-        server.mail('me@domain.com')
-        code, message = server.rcpt(str(addressToVerify))
+        code,msg = server.connect(mxRecord)
+        print("code",code)
         server.quit()
-        if code == 250:
+        if code in range(200,225):
             weight = checkUsername(addressToVerify)
             if weight >= 85:
                return [{'status':"verified"},{'confidence':weight}]
@@ -48,17 +43,20 @@ def emailVerifier(email_address):
 
 
 def checkUsername(addressToVerify):
-    driver = webdriver.PhantomJS(executable_path = '/Users/standarduser/Documents/pratha/phantomjs-2.1.1-macosx/bin/phantomjs')
-    driver.get('https://mail.google.com/mail/u/0/#inbox')
-    #WebDriverWait(driver,500).until(EC.presence_of_element_located((By.CLASS_NAME,'aXBtI Wic03c')))
-    driver.find_element_by_id('identifierId').send_keys(addressToVerify)
-    driver.find_element_by_id('identifierNext').click()
-    driver.implicitly_wait(1)
-    try:
-        text = "try again with that email"
-        k = driver.find_element_by_xpath('//div[contains(text(), "' + text + '")]')
-        return random.uniform(65.0,75.0)
-    except NoSuchElementException:
-        driver.quit()
+    ac = AccountVerify(addressToVerify)
+    bool = True
+    if addressToVerify.lower().find("gmail.com")> -1:
+        bool = ac.gmail_verification()
+    elif addressToVerify.lower().find("yahoo.com")> -1:
+        bool = ac.yahoo_verification()
+    elif addressToVerify.lower().find("outlook.com")> -1 or addressToVerify.lower().find("hotmail.com") > -1:
+        bool = ac.outlook_verification()
+    else:
+        bool = ac.check_through_all()
+    if bool == True:
         return random.uniform(85.0,99.0)
-    driver.quit()
+    else:
+        return random.uniform(65.0,75.0)
+#
+# response = emailVerifier("prathasaxena30@gmail.com")
+# print(response)
