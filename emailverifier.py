@@ -40,7 +40,9 @@ def emailVerifier(email_address):
     except resolver.NXDOMAIN:
        weight =  random.uniform(40.0,50.0)
        return [{'status':"not verified"},{'confidence':weight}]
-
+    except Exception:
+       weight = 51.0
+       return [{'status':"not verified"},{'confidence':weight}]
 
 def checkUsername(addressToVerify):
     ac = AccountVerify(addressToVerify)
