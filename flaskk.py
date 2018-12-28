@@ -2,9 +2,10 @@ import flask
 import emailverifier as ev
 from flask import request, jsonify
 from user_plan import user_plan
+from flask_cors import CORS
 
 app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+CORS(app)
 
 @app.route('/email_verify/', methods=['GET'])
 def home():
@@ -22,4 +23,5 @@ def home():
     if type(bool) == str :
         return jsonify({"message":"User does not exit"})
 
-app.run()
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')

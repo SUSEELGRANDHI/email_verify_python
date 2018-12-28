@@ -4,8 +4,8 @@ from bson.objectid import ObjectId
 class user_plan():
 
     def __init__(self):
-        self.myclient= pymongo.MongoClient("mongodb://localhost:27017/",serverSelectionTimeoutMS = 10000)
-        self.mydb = self.myclient["Downloads"]
+        self.myclient= pymongo.MongoClient("mongodb://ec2-100-24-147-34.compute-1.amazonaws.com:27017/",serverSelectionTimeoutMS = 10000)
+        self.mydb = self.myclient["Intelligense_mongo"]
         self.users = self.mydb["users"]
         self.plans = self.mydb["plans"]
 
