@@ -9,7 +9,7 @@ class AccountVerify:
 
     def __init__(self,address):
         self.address = address
-        self.url = "⁨/phantomjs-2.1.1-linux-x86_64⁩/⁨bin⁩/phantomjs"
+        self.url = "/home/ec2-user/email_verify_python/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
         self.driver = webdriver.PhantomJS(executable_path = self.url)
         self.yahoolink = "https://login.yahoo.com/config/login_verify2?MsgId=8934_0_1252_1721_9103_0_67_428&.src=ym&.intl=us"
         self.outlook = "https://login.live.com/login.srf?wa=wsignin1.0&rpsnv=13&ct=1540886182&rver=7.0.6737.0&wp=MBI_SSL&wreply=https%3a%2f%2foutlook.live.com%2fowa%2f%3fnlp%3d1%26RpsCsrfState%3da9e68d0f-e99e-2082-2698-11c4e8bf0cba&id=292841&CBCXT=out&lw=1&fl=dob%2cflname%2cwld&cobrandid=90015"

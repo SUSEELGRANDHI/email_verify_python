@@ -56,9 +56,11 @@ def checkUsername(addressToVerify):
     else:
         bool = ac.check_through_all()
     if bool == True:
-        return random.uniform(85.0,99.0)
+        #return random.uniform(85.0,99.0)
+        return [{'status':"verified"},{'confidence':random.uniform(85.0,99.0)}]
     else:
-        return random.uniform(65.0,75.0)
+        #return random.uniform(65.0,75.0)
+        return [{'status':"not verified"},{'confidence':random.uniform(65.0,75.0)}]
 #
-# response = emailVerifier("prathasaxena30@gmail.com")
-# print(response)
+#response = emailVerifier("prathasaxena30@gmail.com")
+#print(response)
