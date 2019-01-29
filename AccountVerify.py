@@ -9,8 +9,12 @@ class AccountVerify:
 
     def __init__(self,address):
         self.address = address
-        self.url = "/home/ec2-user/email_verify_python/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
-        self.driver = webdriver.PhantomJS(executable_path = self.url)
+        self.chrome_options = Options()
+        self.chrome_options.headless = True
+        self.chrome_options.add_argument("--headless")
+        self.url = '/home/ec2-user/chromedriver'
+        #self.url = "/home/ec2-user/email_verify_python/phantomjs-2.1.1-linux-x86_64/bin/phantomjs"
+        self.driver = webdriver.Chrome(executable_path = self.url, chrome_options = self.chrome_options)
         self.yahoolink = "https://login.yahoo.com/config/login_verify2?MsgId=8934_0_1252_1721_9103_0_67_428&.src=ym&.intl=us"
         self.outlook = "https://login.live.com/login.srf?wa=wsignin1.0&rpsnv=13&ct=1540886182&rver=7.0.6737.0&wp=MBI_SSL&wreply=https%3a%2f%2foutlook.live.com%2fowa%2f%3fnlp%3d1%26RpsCsrfState%3da9e68d0f-e99e-2082-2698-11c4e8bf0cba&id=292841&CBCXT=out&lw=1&fl=dob%2cflname%2cwld&cobrandid=90015"
 
@@ -43,9 +47,13 @@ class AccountVerify:
 
     def gmail_verification(self):
          self.driver.get('https://mail.google.com/mail/u/0/#inbox')
-         self.driver.find_element_by_id('identifierId').send_keys(self.address)
-         self.driver.find_element_by_id('identifierNext').click()
-         self.driver.implicitly_wait(1)
+         try:
+            self.driver.find_element_by_id('identifierId').send_keys(self.address)
+            self.driver.find_element_by_id('identifierNext').click()
+            self.driver.implicitly_wait(1)
+         except NoSuchElementException:
+            self.driver.quit()
+            return True
          try:
              WebDriverWait(self.driver,8).until(EC.visibility_of_element_located((By.XPATH,"//div[@id='passwordNext']")))
              self.driver.find_element_by_xpath("//div[@id='passwordNext']")
@@ -60,9 +68,9 @@ class AccountVerify:
     def check_through_all(self):
         response = self.gmail_verification()
         if response == False:
-            self.driver = webdriver.PhantomJS(executable_path = self.url)
+            self.driver = webdriver.Chrome(executable_path = self.url, chrome_options = self.chrome_options)
             response = self.outlook_verification()
             if response == False:
-                 self.driver = webdriver.PhantomJS(executable_path = self.url)
+                 self.driver = webdriver.Chrome(executable_path = self.url, chrome_options = self.chrome_options)
                  response = self.yahoo_verification()
         return response

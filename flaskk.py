@@ -1,4 +1,5 @@
 import flask
+from python_api.wappalyzerr import techfind
 import emailverifier as ev
 from flask import request, jsonify,Response
 from user_plan import user_plan
@@ -6,6 +7,13 @@ from flask_cors import CORS,cross_origin
 
 app = flask.Flask(__name__)
 CORS(app)
+
+@app.route('/tech_finder/', methods = ['POST'])
+def techfinderapi():
+    #url = 'http://www.nupowerrenewables.in/'
+    url = request.form['websiteurl']
+    print(url)
+    return jsonify(techfind(url))
 
 @app.route('/email_verify/', methods=['GET'])
 def home():
@@ -19,16 +27,18 @@ def home():
         result = ev.checkUsername(email)
         if len(result)> 0:
             user.update_users()
-        resp = Response(str(result))
-    if bool_ == False:
-        resp = Response(str({"message":"You have exceeded your Email vefifier limit"}))
-    if type(bool_) == str :
-        resp =  Response(str({"message":"User does not exit"}))
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-    resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
-    resp.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
-    resp.headers['Access-Control-Allow-Credentials'] = 'true'
-    return resp
+        #resp = Response(str(result))
+        return jsonify(result)
+    if bool_ ==False:
+        return jsonify({"message": "you have exceeded your email verifier limit"})
+       # resp = Response(str({"message":"You have exceeded your Email vefifier limit"}))
+    #if type(bool_) == str :
+    #    resp =  Response(str({"message":"User does not exit"}))
+    #resp.headers['Access-Control-Allow-Origin'] = '*'
+    #resp.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+    #resp.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
+    #resp.headers['Access-Control-Allow-Credentials'] = 'true'
+    #return resp
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
