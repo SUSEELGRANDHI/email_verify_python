@@ -1,5 +1,5 @@
 import flask
-from python_api.wappalyzerr import techfind
+from techfinder.wappalyzerr import techfind
 import emailverifier as ev
 from flask import request, jsonify,Response
 from user_plan import user_plan
